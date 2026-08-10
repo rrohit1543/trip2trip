@@ -1,4 +1,5 @@
-import { User, OperatorKYC, Trip, LiveTelemetry, Booking, Review, ChatMessage } from '../types';
+import { User, OperatorKYC, Trip, LiveTelemetry, Booking, Review, ChatMessage, SecurityEvent } from '../types';
+import { hashPassword } from './security';
 
 export const INITIAL_USERS: User[] = [
   {
@@ -6,6 +7,9 @@ export const INITIAL_USERS: User[] = [
     name: 'Rahul Sharma',
     email: 'rahul.sharma@example.com',
     phone: '+91 98765 43210',
+    authIdentifier: 'rahul.sharma@example.com',
+    authMethod: 'email',
+    passwordHash: hashPassword('password123'),
     role: 'customer',
     avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80',
     isVerified: true,
@@ -15,6 +19,9 @@ export const INITIAL_USERS: User[] = [
     name: 'Vikramaditya Singh',
     email: 'vikram@himalayanyatra.com',
     phone: '+91 98111 22334',
+    authIdentifier: '+91 98111 22334',
+    authMethod: 'mobile',
+    passwordHash: hashPassword('operator123'),
     role: 'operator',
     avatar: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=150&q=80',
     isVerified: true,
@@ -25,6 +32,9 @@ export const INITIAL_USERS: User[] = [
     name: 'Ananya Deshmukh',
     email: 'ananya@coastalexpress.in',
     phone: '+91 97222 33445',
+    authIdentifier: 'ananya@coastalexpress.in',
+    authMethod: 'email',
+    passwordHash: hashPassword('coastal123'),
     role: 'operator',
     avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=150&q=80',
     isVerified: true,
@@ -32,12 +42,16 @@ export const INITIAL_USERS: User[] = [
   },
   {
     id: 'usr_admin_1',
-    name: 'Trip2Trip Control',
+    name: 'Trip2Trip Super Admin',
     email: 'admin@trip2trip.com',
     phone: '+91 1800 123 4567',
+    authIdentifier: 'admin@trip2trip.com',
+    authMethod: 'email',
+    passwordHash: hashPassword('adminPass123!'),
     role: 'admin',
     avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
     isVerified: true,
+    mfaEnabled: true,
   },
 ];
 
@@ -82,57 +96,37 @@ export const INITIAL_OPERATOR_KYC: OperatorKYC[] = [
     status: 'approved',
     createdAt: '2026-07-20T14:30:00Z',
   },
-  {
-    id: 'kyc_op_3',
-    operatorId: 'usr_operator_3',
-    companyName: 'Royal Rajasthan Travels',
-    ownerName: 'Harshwardhan Rathore',
-    email: 'harsh@royalrajasthan.in',
-    phone: '+91 94140 99887',
-    aadhaarNumber: '7766 5544 3322',
-    panNumber: 'RATH7711K',
-    gstNumber: '08RATH7711K1Z9',
-    bankAccount: '11029384756',
-    ifscCode: 'SBIN0003011',
-    upiId: 'royalrajasthan@sbi',
-    address: 'MI Road, Jaipur, Rajasthan 302001',
-    emergencyContact: '+91 94140 99888',
-    logoUrl: 'https://images.unsplash.com/photo-1477587458883-47145ed94245?auto=format&fit=crop&w=200&q=80',
-    status: 'pending',
-    createdAt: '2026-08-06T09:15:00Z',
-  },
 ];
 
-// Coordinate Waypoints for Route Paths
 const DELHI_MANALI_PATH: [number, number][] = [
-  [28.6139, 77.2090], // Delhi ISBT Kashmiri Gate
-  [28.9845, 77.0178], // Sonipat
-  [29.3909, 76.9635], // Panipat
-  [29.6857, 76.9905], // Karnal
-  [30.3752, 76.7821], // Ambala Cantt
-  [30.7333, 76.7794], // Chandigarh Bypass (Passing through)
-  [30.9010, 76.5266], // Ropar / Roopnagar
-  [31.3260, 76.9855], // Mandi
-  [31.8950, 77.1540], // Kullu Valley
-  [32.2432, 77.1892], // Manali Mall Road
+  [28.6139, 77.2090],
+  [28.9845, 77.0178],
+  [29.3909, 76.9635],
+  [29.6857, 76.9905],
+  [30.3752, 76.7821],
+  [30.7333, 76.7794],
+  [30.9010, 76.5266],
+  [31.3260, 76.9855],
+  [31.8950, 77.1540],
+  [32.2432, 77.1892],
 ];
 
 const MUMBAI_GOA_PATH: [number, number][] = [
-  [19.0760, 72.8777], // Mumbai Chembur
-  [18.5204, 73.8567], // Pune Expressway
-  [17.6805, 74.0183], // Satara
-  [16.7050, 74.2433], // Kolhapur
-  [15.8497, 74.5086], // Belagavi Bypass
-  [15.4989, 73.8278], // Panaji Goa
+  [19.0760, 72.8777],
+  [18.5204, 73.8567],
+  [17.6805, 74.0183],
+  [16.7050, 74.2433],
+  [15.8497, 74.5086],
+  [15.4989, 73.8278],
 ];
 
 const INDORE_GOA_PATH: [number, number][] = [
-  [22.7196, 75.8577], // Indore Vijay Nagar
-  [20.0059, 73.7898], // Nashik Bypass
-  [19.0760, 72.8777], // Mumbai Pass-through
-  [18.5204, 73.8567], // Pune
-  [16.7050, 74.2433], // Kolhapur
-  [15.4989, 73.8278], // Panaji Goa
+  [22.7196, 75.8577],
+  [20.0059, 73.7898],
+  [19.0760, 72.8777],
+  [18.5204, 73.8567],
+  [16.7050, 74.2433],
+  [15.4989, 73.8278],
 ];
 
 export const INITIAL_TRIPS: Trip[] = [
@@ -155,13 +149,13 @@ export const INITIAL_TRIPS: Trip[] = [
     ],
     durationDays: 4,
     durationNights: 3,
-    departureDateTime: '2026-08-07T18:00:00Z',
-    returnDateTime: '2026-08-11T10:00:00Z',
+    departureDateTime: '2026-08-11T18:00:00Z',
+    returnDateTime: '2026-08-15T10:00:00Z',
     pricePerPerson: 6999,
     totalSeats: 30,
     availableSeats: 6,
     bookedSeatNumbers: [1, 2, 3, 4, 5, 7, 8, 9, 10, 12, 13, 14, 15, 16, 17, 18, 20, 21, 22, 23, 25, 26, 27, 28],
-    bookingDeadline: '2026-08-07T14:00:00Z',
+    bookingDeadline: '2026-08-11T14:00:00Z',
     itinerary: [
       {
         dayNumber: 1,
@@ -177,52 +171,29 @@ export const INITIAL_TRIPS: Trip[] = [
         meals: 'Breakfast & Dinner',
         stayDetails: 'Snow Crest Resort 4★',
       },
-      {
-        dayNumber: 3,
-        title: 'Solang Valley & Atal Tunnel Adventure Day',
-        activities: ['Paragliding & Zorbing at Solang Valley', 'Cross Atal Tunnel to Sissu Valley', 'Bonfire & DJ Night with Group'],
-        meals: 'Breakfast & Dinner',
-        stayDetails: 'Snow Crest Resort 4★',
-      },
-      {
-        dayNumber: 4,
-        title: 'Jogini Waterfall Trek & Departure to Delhi',
-        activities: ['Morning Trek to Jogini Waterfalls', 'Shopping at Old Manali', 'Board Return Volvo to Delhi'],
-        meals: 'Breakfast Included',
-        stayDetails: 'Overnight Journey',
-      },
     ],
     inclusions: [
       'Luxury AC Sleeper Volvo Transport (Round Trip)',
       '3 Nights Hotel Stay in Deluxe Rooms',
-      'Daily Breakfast & Dinner (Buffet Style)',
-      'Atal Tunnel & Solang Valley Permits',
-      'Certified Himalayan Tour Leader & Local Guide',
-      'Bonfire Night & Group Photography',
+      'Daily Breakfast & Dinner',
     ],
-    exclusions: [
-      'Paragliding & Adventure Activity Charges',
-      'Lunch Meals & Personal Snacks',
-      'GST 5% extra',
-    ],
-    cancellationPolicy: '100% refund if cancelled 7 days prior. 50% refund 3 days prior. Non-refundable within 24 hours of departure.',
-    requiredDocuments: ['Govt ID Proof (Aadhaar / Passport / Voter ID)', 'Medical Self-Declaration Form'],
+    exclusions: ['Paragliding activity charges', 'GST 5% extra'],
+    cancellationPolicy: '100% refund if cancelled 7 days prior. 50% refund 3 days prior.',
+    requiredDocuments: ['Govt ID Proof (Aadhaar / Passport / Voter ID)'],
     images: [
       'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=800&q=80',
     ],
     tourGuide: {
       name: 'Rohan Verma',
       phone: '+91 98711 00223',
       rating: 4.9,
-      languages: ['English', 'Hindi', 'Pahadi'],
+      languages: ['English', 'Hindi'],
       photo: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&q=80',
     },
     vehicle: {
       type: 'Volvo B11R 2+1 Multi-Axle Sleeper',
       regNumber: 'HR 55 AH 7890',
-      amenities: ['Personal TV Screen', 'Type-C USB Chargers', 'Reclining Sleepers', 'Live GPS Tracking', 'First Aid Kit'],
+      amenities: ['USB Chargers', 'Reclining Sleepers', 'Live GPS Tracking'],
       driverName: 'Gurdeep Singh',
       driverPhone: '+91 98140 12345',
     },
@@ -233,7 +204,7 @@ export const INITIAL_TRIPS: Trip[] = [
       images: ['https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80'],
     },
     difficultyLevel: 'Easy',
-    tags: ['Best Seller', 'Group Trip', 'Atal Tunnel', 'Live GPS'],
+    tags: ['Best Seller', 'Group Trip', 'Live GPS'],
     status: 'live',
     routePath: DELHI_MANALI_PATH,
     intermediateCities: ['Delhi', 'Sonipat', 'Panipat', 'Karnal', 'Ambala', 'Chandigarh', 'Ropar', 'Mandi', 'Kullu', 'Manali'],
@@ -253,80 +224,42 @@ export const INITIAL_TRIPS: Trip[] = [
     dropPoints: [
       { name: 'Pune Chandani Chowk', lat: 18.5074, lng: 73.7806 },
       { name: 'Kolhapur Expressway Plaza', lat: 16.7050, lng: 74.2433 },
-      { name: 'Mapusa Bus Stand Goa', lat: 15.5925, lng: 73.8090 },
       { name: 'Panaji KTC Bus Stand', lat: 15.4989, lng: 73.8278 },
     ],
     durationDays: 5,
     durationNights: 4,
-    departureDateTime: '2026-08-07T20:00:00Z',
-    returnDateTime: '2026-08-12T08:00:00Z',
+    departureDateTime: '2026-08-11T20:00:00Z',
+    returnDateTime: '2026-08-16T08:00:00Z',
     pricePerPerson: 8499,
     totalSeats: 24,
     availableSeats: 4,
     bookedSeatNumbers: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
-    bookingDeadline: '2026-08-07T16:00:00Z',
+    bookingDeadline: '2026-08-11T16:00:00Z',
     itinerary: [
       {
         dayNumber: 1,
         title: 'Mumbai to Goa Overnight Highway Cruise',
-        activities: ['Pickup at Mumbai Chembur', 'Dinner stop at Pune Highway Hub', 'Live Music on bus sound system'],
+        activities: ['Pickup at Mumbai Chembur', 'Dinner stop at Pune Highway Hub'],
         meals: 'Snacks & Drinks',
         stayDetails: 'Luxury Volvo Sleeper Bus',
       },
-      {
-        dayNumber: 2,
-        title: 'North Goa Beach Hopping & Sunset Party',
-        activities: ['Check-in at Riva Beach Resort', 'Baga & Calangute Beach watersports', 'Sunset Party at Thalassa Vagator'],
-        meals: 'Breakfast & Dinner',
-        stayDetails: 'Riva Beach Resort 4★',
-      },
-      {
-        dayNumber: 3,
-        title: 'Dudhsagar Waterfalls & Spice Plantation Safari',
-        activities: ['Jeep Safari to Dudhsagar Waterfalls', 'Traditional Goan Lunch at Spice Plantation', 'Mandovi River Sunset Cruise'],
-        meals: 'Breakfast & Lunch',
-        stayDetails: 'Riva Beach Resort 4★',
-      },
-      {
-        dayNumber: 4,
-        title: 'South Goa Heritage & Fountainhas Walk',
-        activities: ['Old Goa Basilica of Bom Jesus', 'Latin Quarter Fontainhas Heritage Walk', 'Night Clubbing at Tito’s Lane'],
-        meals: 'Breakfast',
-        stayDetails: 'Riva Beach Resort 4★',
-      },
-      {
-        dayNumber: 5,
-        title: 'Souvenir Shopping & Return Journey',
-        activities: ['Panaji Market Shopping', 'Board return bus to Mumbai'],
-        meals: 'Breakfast',
-        stayDetails: 'Overnight Journey',
-      },
     ],
-    inclusions: [
-      'AC Volvo Sleeper Bus (Mumbai-Goa-Mumbai)',
-      '3 Nights Beach Resort Stay near Baga',
-      'Mandovi River Dinner Cruise Ticket',
-      'Dudhsagar Jeep Safari Permits',
-      'Complimentary Welcome Drinks & Beach Party Pass',
-    ],
-    exclusions: ['Watersports activities', 'Personal Bar expenses'],
+    inclusions: ['AC Volvo Sleeper Bus', '3 Nights Beach Resort Stay', 'Mandovi River Dinner Cruise Ticket'],
+    exclusions: ['Watersports activities'],
     cancellationPolicy: 'Full refund 5 days before trip.',
-    requiredDocuments: ['Aadhaar Card / Driving License'],
-    images: [
-      'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80',
-    ],
+    requiredDocuments: ['Aadhaar Card'],
+    images: ['https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=800&q=80'],
     tourGuide: {
       name: 'Samaira Khan',
       phone: '+91 97111 88990',
       rating: 4.8,
-      languages: ['English', 'Hindi', 'Konkani'],
+      languages: ['English', 'Hindi'],
       photo: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
     },
     vehicle: {
       type: 'Scania Metrolink 2+1 Luxury Sleeper',
       regNumber: 'MH 04 FK 3341',
-      amenities: ['WiFi Onboard', 'Individual AC Vents', 'Blankets & Pillows', 'Refrigerated Bottled Water'],
+      amenities: ['WiFi Onboard', 'Blankets & Pillows'],
       driverName: 'Rajesh Patil',
       driverPhone: '+91 98220 54321',
     },
@@ -337,169 +270,19 @@ export const INITIAL_TRIPS: Trip[] = [
       images: ['https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80'],
     },
     difficultyLevel: 'Easy',
-    tags: ['Live GPS', 'Beach Party', 'Resort Stay'],
+    tags: ['Live GPS', 'Beach Party'],
     status: 'live',
     routePath: MUMBAI_GOA_PATH,
     intermediateCities: ['Mumbai', 'Navi Mumbai', 'Lonavala', 'Pune', 'Satara', 'Kolhapur', 'Belagavi', 'Goa', 'Panaji'],
-  },
-  {
-    id: 'trip_3',
-    operatorId: 'usr_operator_2',
-    operatorName: 'Coastal Caravan Tours',
-    operatorLogo: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=200&q=80',
-    operatorRating: 4.8,
-    operatorReviewsCount: 98,
-    name: 'Indore to Goa Super-Express Route Group Tour',
-    category: 'Adventure',
-    departureCity: 'Indore',
-    destinationCity: 'Goa',
-    pickupLocation: { name: 'Vijay Nagar / Palasia, Indore', lat: 22.7533, lng: 75.8937 },
-    dropPoints: [
-      { name: 'Nashik Dwarka Circle', lat: 19.9975, lng: 73.7898 },
-      { name: 'Mumbai Chembur Hub', lat: 19.0760, lng: 72.8777 },
-      { name: 'Panaji Bus Terminal Goa', lat: 15.4989, lng: 73.8278 },
-    ],
-    durationDays: 6,
-    durationNights: 5,
-    departureDateTime: '2026-08-07T15:00:00Z',
-    returnDateTime: '2026-08-13T10:00:00Z',
-    pricePerPerson: 9999,
-    totalSeats: 30,
-    availableSeats: 8,
-    bookedSeatNumbers: [1, 3, 5, 7, 9, 11, 12, 13, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28],
-    bookingDeadline: '2026-08-07T12:00:00Z',
-    itinerary: [
-      {
-        dayNumber: 1,
-        title: 'Indore departure via Nashik & Mumbai Expressway',
-        activities: ['Departing Vijay Nagar Square', 'Dinner at Nashik Highway Dhaba'],
-        meals: 'Dinner',
-        stayDetails: 'Luxury AC Sleeper',
-      },
-      {
-        dayNumber: 2,
-        title: 'Arrival in North Goa',
-        activities: ['Check-in at Vagator Palm Resort', 'Anjuna Flea Market & Sunset'],
-        meals: 'Breakfast & Dinner',
-        stayDetails: 'Vagator Palm Resort 4★',
-      },
-    ],
-    inclusions: ['Round Trip AC Sleeper', 'Resort Stay', 'Breakfast & Dinner', 'Tour Captain Support'],
-    exclusions: ['Personal Expenses', 'GST'],
-    cancellationPolicy: 'Standard 48-hour cancellation policy.',
-    requiredDocuments: ['Aadhaar Card'],
-    images: [
-      'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=800&q=80',
-    ],
-    tourGuide: {
-      name: 'Amitabh Joshi',
-      phone: '+91 98930 11223',
-      rating: 4.7,
-      languages: ['Hindi', 'English'],
-      photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80',
-    },
-    vehicle: {
-      type: 'BharatBenz AC Sleeper 2+1',
-      regNumber: 'MP 09 AB 4421',
-      amenities: ['Live GPS', 'Charging Ports', 'Water Bottle', 'Clean Linens'],
-      driverName: 'Suresh Kumar',
-      driverPhone: '+91 94250 88776',
-    },
-    hotel: {
-      name: 'Vagator Palm Resort',
-      stars: 4,
-      location: 'Vagator, Goa',
-      images: ['https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80'],
-    },
-    difficultyLevel: 'Moderate',
-    tags: ['Live GPS', 'Indore Direct', 'Goa Beach'],
-    status: 'live',
-    routePath: INDORE_GOA_PATH,
-    intermediateCities: ['Indore', 'Dhule', 'Nashik', 'Thane', 'Mumbai', 'Pune', 'Satara', 'Kolhapur', 'Belagavi', 'Goa'],
-  },
-  {
-    id: 'trip_4',
-    operatorId: 'usr_operator_1',
-    operatorName: 'Himalayan Yatra Expeditions',
-    operatorLogo: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=200&q=80',
-    operatorRating: 4.9,
-    operatorReviewsCount: 142,
-    name: 'Kasol, Kheerganga & Manikaran Sahib Adventure Trek',
-    category: 'Trekking',
-    departureCity: 'Delhi',
-    destinationCity: 'Manali',
-    pickupLocation: { name: 'Kashmiri Gate ISBT, Delhi', lat: 28.6667, lng: 77.2333 },
-    dropPoints: [
-      { name: 'Chandigarh Sector 43 ISBT', lat: 30.7275, lng: 76.7453 },
-      { name: 'Bhuntar Airport / Parvati Valley Gate', lat: 31.8763, lng: 77.1541 },
-      { name: 'Kasol Chalal Bridge', lat: 32.0100, lng: 77.3150 },
-    ],
-    durationDays: 4,
-    durationNights: 3,
-    departureDateTime: '2026-08-08T20:30:00Z',
-    returnDateTime: '2026-08-12T07:00:00Z',
-    pricePerPerson: 5499,
-    totalSeats: 30,
-    availableSeats: 12,
-    bookedSeatNumbers: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
-    bookingDeadline: '2026-08-08T15:00:00Z',
-    itinerary: [
-      {
-        dayNumber: 1,
-        title: 'Delhi to Kasol Parvati Valley Journey',
-        activities: ['Boarding Volvo at Kashmiri Gate', 'Overnight Journey'],
-        meals: 'None',
-        stayDetails: 'Volvo Bus',
-      },
-      {
-        dayNumber: 2,
-        title: 'Kasol Riverside Camping & Chalal Trek',
-        activities: ['Check-in Riverside Tents', 'Trek to Chalal Village & Cafe Hopping'],
-        meals: 'Dinner',
-        stayDetails: 'Alpine Riverside Tents',
-      },
-    ],
-    inclusions: ['Volvo Transport', 'Camping Tents', 'Breakfast & Dinner', 'Trek Guide'],
-    exclusions: ['Personal Expenses'],
-    cancellationPolicy: 'Cancel up to 3 days before trip.',
-    requiredDocuments: ['Govt ID'],
-    images: [
-      'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80',
-    ],
-    tourGuide: {
-      name: 'Devender Sharma',
-      phone: '+91 98160 55443',
-      rating: 4.9,
-      languages: ['Hindi', 'English'],
-      photo: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&q=80',
-    },
-    vehicle: {
-      type: 'Volvo B11R 2+2 Semi-Sleeper',
-      regNumber: 'HP 01 AA 1008',
-      amenities: ['Reclining Seats', 'USB Chargers', 'GPS Tracked'],
-      driverName: 'Mohan Singh',
-      driverPhone: '+91 98170 33221',
-    },
-    hotel: {
-      name: 'Kasol Alpine Camps',
-      stars: 3,
-      location: 'Parvati River Bank, Kasol',
-      images: ['https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80'],
-    },
-    difficultyLevel: 'Moderate',
-    tags: ['Trekking', 'Kasol', 'Kasol-Manali Route'],
-    status: 'upcoming',
-    routePath: DELHI_MANALI_PATH,
-    intermediateCities: ['Delhi', 'Panipat', 'Karnal', 'Ambala', 'Chandigarh', 'Mandi', 'Bhuntar', 'Kasol', 'Manali'],
   },
 ];
 
 export const INITIAL_TELEMETRY: Record<string, LiveTelemetry> = {
   trip_1: {
     tripId: 'trip_1',
-    currentLat: 30.7333, // Near Chandigarh
+    currentLat: 30.7333,
     currentLng: 76.7794,
-    currentSpeed: 64, // km/h
+    currentSpeed: 64,
     heading: 345,
     currentStopIndex: 4,
     currentStopName: 'Passing Chandigarh Bypass Plaza',
@@ -511,9 +294,9 @@ export const INITIAL_TELEMETRY: Record<string, LiveTelemetry> = {
   },
   trip_2: {
     tripId: 'trip_2',
-    currentLat: 16.7050, // Near Kolhapur
+    currentLat: 16.7050,
     currentLng: 74.2433,
-    currentSpeed: 72, // km/h
+    currentSpeed: 72,
     heading: 190,
     currentStopIndex: 2,
     currentStopName: 'Kolhapur Expressway Plaza',
@@ -522,20 +305,6 @@ export const INITIAL_TELEMETRY: Record<string, LiveTelemetry> = {
     etaDestination: '3 hrs 40 mins',
     lastUpdated: 'Just now',
     progressPercent: 62,
-  },
-  trip_3: {
-    tripId: 'trip_3',
-    currentLat: 19.0760, // Near Mumbai on Indore-Goa route
-    currentLng: 72.8777,
-    currentSpeed: 58,
-    heading: 180,
-    currentStopIndex: 2,
-    currentStopName: 'Mumbai Chembur Pickup Hub',
-    nextStopName: 'Pune Expressway Food Plaza',
-    etaNextStop: '1 hr 10 mins',
-    etaDestination: '7 hrs 30 mins',
-    lastUpdated: 'Just now',
-    progressPercent: 35,
   },
 };
 
@@ -571,22 +340,9 @@ export const INITIAL_REVIEWS: Review[] = [
     operatorRating: 5,
     driverRating: 5,
     guideRating: 5,
-    comment: 'Exceptional trip experience! The live tracking feature kept my family relaxed throughout the night. Coach was ultra clean and Rohan our guide was super helpful at Solang Valley!',
-    photos: ['https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80'],
-    createdAt: '2026-08-01T15:30:00Z',
-  },
-  {
-    id: 'rev_2',
-    tripId: 'trip_2',
-    operatorId: 'usr_operator_2',
-    customerId: 'usr_customer_2',
-    customerName: 'Karan Malhotra',
-    operatorRating: 5,
-    driverRating: 4,
-    guideRating: 5,
-    comment: 'The Coastal Caravan team organised the best Goa beach party ever. The live speed and route map worked smoothly!',
+    comment: 'Exceptional trip experience! The live tracking feature kept my family relaxed throughout the night.',
     photos: [],
-    createdAt: '2026-07-28T18:45:00Z',
+    createdAt: '2026-08-01T15:30:00Z',
   },
 ];
 
@@ -597,25 +353,24 @@ export const INITIAL_CHAT: ChatMessage[] = [
     senderId: 'usr_operator_1',
     senderName: 'Himalayan Yatra Support',
     senderRole: 'operator',
-    text: 'Welcome aboard! Our bus HR 55 AH 7890 has reached Majnu Ka Tilla. Please keep your Aadhaar ready for quick check-in.',
-    timestamp: '2026-08-07T17:45:00Z',
+    text: 'Welcome aboard! Our bus HR 55 AH 7890 has reached Majnu Ka Tilla. Please keep your ID ready.',
+    timestamp: '2026-08-11T17:45:00Z',
+  },
+];
+
+export const INITIAL_SECURITY_LOGS: SecurityEvent[] = [
+  {
+    id: 'sec_1001',
+    timestamp: new Date(Date.now() - 3600000).toISOString(),
+    eventType: 'LOGIN_SUCCESS',
+    identifier: 'rahul.sharma@example.com',
+    details: 'Customer logged in via Email/Password',
   },
   {
-    id: 'chat_2',
-    tripId: 'trip_1',
-    senderId: 'usr_customer_1',
-    senderName: 'Rahul Sharma',
-    senderRole: 'customer',
-    text: 'Great! Boarded seat 14. What time is the dinner halt near Murthal?',
-    timestamp: '2026-08-07T18:10:00Z',
-  },
-  {
-    id: 'chat_3',
-    tripId: 'trip_1',
-    senderId: 'usr_operator_1',
-    senderName: 'Driver Gurdeep Singh',
-    senderRole: 'operator',
-    text: 'We will be reaching Haveli Murthal around 8:45 PM for 45 minutes dinner break.',
-    timestamp: '2026-08-07T18:12:00Z',
+    id: 'sec_1002',
+    timestamp: new Date(Date.now() - 1800000).toISOString(),
+    eventType: 'ADMIN_MFA_SUCCESS',
+    identifier: 'admin@trip2trip.com',
+    details: 'Super Admin verified 2FA MFA OTP code successfully',
   },
 ];

@@ -5,10 +5,43 @@ export interface User {
   name: string;
   email: string;
   phone: string;
+  authIdentifier: string; // mobile number or email address
+  authMethod: 'mobile' | 'email';
+  passwordHash?: string;
   role: UserRole;
   avatar: string;
   isVerified: boolean;
+  mfaEnabled?: boolean;
   operatorCompany?: string;
+}
+
+export interface OtpSession {
+  id: string;
+  target: string; // mobile number or email address
+  code: string;
+  expiresAt: number; // timestamp in ms
+  attempts: number;
+  maxAttempts: number;
+  isUsed: boolean;
+  type: 'registration' | 'password_reset' | 'admin_mfa';
+}
+
+export interface SecurityEvent {
+  id: string;
+  timestamp: string;
+  eventType:
+    | 'LOGIN_SUCCESS'
+    | 'LOGIN_FAILED'
+    | 'OTP_SENT'
+    | 'OTP_VERIFIED'
+    | 'OTP_FAILED'
+    | 'PASSWORD_RESET_REQUESTED'
+    | 'PASSWORD_RESET_SUCCESS'
+    | 'ADMIN_MFA_SENT'
+    | 'ADMIN_MFA_SUCCESS'
+    | 'UNAUTHORIZED_ADMIN_ATTEMPT';
+  identifier: string;
+  details: string;
 }
 
 export interface OperatorKYC {
@@ -56,7 +89,7 @@ export interface TourGuide {
 }
 
 export interface Vehicle {
-  type: string; // e.g. "Volvo B11R Multi-Axle AC Sleeper"
+  type: string;
   regNumber: string;
   amenities: string[];
   driverName: string;
@@ -104,7 +137,7 @@ export interface Trip {
   difficultyLevel: 'Easy' | 'Moderate' | 'Hard';
   tags: string[];
   status: 'upcoming' | 'live' | 'completed' | 'cancelled';
-  routePath: [number, number][]; // [lat, lng][]
+  routePath: [number, number][];
   intermediateCities: string[];
 }
 
@@ -112,7 +145,7 @@ export interface LiveTelemetry {
   tripId: string;
   currentLat: number;
   currentLng: number;
-  currentSpeed: number; // km/h
+  currentSpeed: number;
   heading: number;
   currentStopIndex: number;
   currentStopName: string;

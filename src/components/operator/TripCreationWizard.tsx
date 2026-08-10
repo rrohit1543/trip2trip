@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { Trip, ItineraryDay } from '../../types';
-import { X, Plus, Trash2, Bus, MapPin, Calendar, DollarSign, ShieldAlert, FileText, CheckCircle2, Star } from 'lucide-react';
+import { X, Plus, Trash2, Bus, MapPin, Calendar } from 'lucide-react';
 
 interface TripCreationWizardProps {
   onClose: () => void;
@@ -12,7 +12,6 @@ interface TripCreationWizardProps {
 export default function TripCreationWizard({ onClose, onCreateTrip }: TripCreationWizardProps) {
   const [step, setStep] = useState(1);
 
-  // Form Fields
   const [name, setName] = useState('Spiti Valley Camping & Star-Gazing Expedition');
   const [category, setCategory] = useState<'Trekking' | 'Heritage' | 'Beach Caravan' | 'Leisure & Luxury' | 'Spiritual' | 'Adventure'>('Trekking');
   const [departureCity, setDepartureCity] = useState('Delhi');
@@ -35,7 +34,6 @@ export default function TripCreationWizard({ onClose, onCreateTrip }: TripCreati
   const [totalSeats, setTotalSeats] = useState(24);
   const [difficultyLevel, setDifficultyLevel] = useState<'Easy' | 'Moderate' | 'Hard'>('Moderate');
 
-  // Itinerary
   const [itinerary, setItinerary] = useState<ItineraryDay[]>([
     {
       dayNumber: 1,
@@ -53,7 +51,6 @@ export default function TripCreationWizard({ onClose, onCreateTrip }: TripCreati
     },
   ]);
 
-  // Inclusions & Exclusions
   const [inclusions, setInclusions] = useState([
     'Luxury Volvo / Tempo Traveler Transport',
     'Stays in Deluxe Hotels & Alpine Tents',
@@ -64,7 +61,6 @@ export default function TripCreationWizard({ onClose, onCreateTrip }: TripCreati
   const [cancellationPolicy, setCancellationPolicy] = useState('100% refund 7 days before departure. Non-refundable within 48 hrs.');
   const [requiredDocs, setRequiredDocs] = useState(['Aadhaar Card Copy', 'Medical Fitness Certificate']);
 
-  // Vehicle & Guide Details
   const [vehicleType, setVehicleType] = useState('Force Urbania 17-Seater Luxury AC');
   const [vehicleReg, setVehicleReg] = useState('DL 01 EXP 9988');
   const [driverName, setDriverName] = useState('Sarabjit Singh');
@@ -143,64 +139,62 @@ export default function TripCreationWizard({ onClose, onCreateTrip }: TripCreati
       difficultyLevel,
       tags: ['Spiti Valley', 'High Altitude', 'Live GPS'],
       routePath: [
-        [28.6139, 77.2090], // Delhi
-        [30.7333, 76.7794], // Chandigarh
-        [31.1048, 77.1734], // Shimla
-        [31.5000, 78.2000], // Kalpa
-        [32.2276, 78.0710], // Kaza Spiti
+        [28.6139, 77.2090],
+        [30.7333, 76.7794],
+        [31.1048, 77.1734],
+        [31.5000, 78.2000],
+        [32.2276, 78.0710],
       ],
       intermediateCities: ['Delhi', 'Chandigarh', 'Shimla', 'Narkanda', 'Kalpa', 'Kaza', 'Spiti'],
     });
 
     onClose();
-    alert('New Group Trip Published Successfully! Available live for booking & route discovery.');
+    alert('New Group Trip Published Successfully!');
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md overflow-y-auto">
-      <div className="relative w-full max-w-4xl bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
-        {/* Header */}
-        <div className="p-5 bg-slate-950 border-b border-slate-800 flex items-center justify-between">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md overflow-y-auto">
+      <div className="relative w-full max-w-4xl bg-black border-2 border-neutral-900 rounded-3xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
+        <div className="p-5 bg-neutral-950 border-b border-neutral-900 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Bus className="w-6 h-6 text-emerald-400" />
+            <Bus className="w-6 h-6 text-red-500" />
             <div>
               <h3 className="text-lg font-black text-white">Create New Group Tour Package</h3>
-              <p className="text-xs text-slate-400">Configure route, day-wise itinerary, seats, and pricing</p>
+              <p className="text-xs text-neutral-400">Configure route, day-wise itinerary, seats, and pricing</p>
             </div>
           </div>
-          <button onClick={onClose} className="p-2 text-slate-400 hover:text-white rounded-full bg-slate-900 border border-slate-800">
+          <button onClick={onClose} className="p-2 text-neutral-400 hover:text-white rounded-full bg-neutral-900 border border-neutral-800">
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Wizard Steps */}
-        <div className="flex items-center justify-between bg-slate-950/60 px-6 py-3 border-b border-slate-800 text-xs font-bold">
-          <span className={step >= 1 ? 'text-emerald-400' : 'text-slate-500'}>1. Basic Details & Route</span>
-          <span className={step >= 2 ? 'text-emerald-400' : 'text-slate-500'}>2. Itinerary Builder</span>
-          <span className={step >= 3 ? 'text-emerald-400' : 'text-slate-500'}>3. Vehicle, Guide & Inclusions</span>
+        <div className="flex items-center justify-between bg-neutral-950 px-6 py-3 border-b border-neutral-900 text-xs font-bold">
+          <span className={step >= 1 ? 'text-red-500' : 'text-neutral-600'}>1. Basic Details & Route</span>
+          <span className={step >= 2 ? 'text-red-500' : 'text-neutral-600'}>2. Itinerary Builder</span>
+          <span className={step >= 3 ? 'text-red-500' : 'text-neutral-600'}>3. Vehicle, Guide & Inclusions</span>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 overflow-y-auto space-y-6 flex-1">
+        <form onSubmit={handleSubmit} className="p-6 overflow-y-auto space-y-6 flex-1 bg-black">
           {step === 1 && (
             <div className="space-y-4">
               <div>
-                <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">Trip Name</label>
+                <label className="block text-[10px] font-bold text-neutral-400 uppercase mb-1">Trip Name</label>
                 <input
                   type="text"
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs font-bold text-white focus:outline-none focus:border-emerald-500"
+                  className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-3.5 py-2.5 text-xs font-bold text-white focus:outline-none focus:border-red-600"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">Category</label>
+                  <label className="block text-[10px] font-bold text-neutral-400 uppercase mb-1">Category</label>
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value as any)}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none"
+                    className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none"
                   >
                     <option value="Trekking">Trekking</option>
                     <option value="Beach Caravan">Beach Caravan</option>
@@ -211,48 +205,46 @@ export default function TripCreationWizard({ onClose, onCreateTrip }: TripCreati
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">Departure City</label>
+                  <label className="block text-[10px] font-bold text-neutral-400 uppercase mb-1">Departure City</label>
                   <input
                     type="text"
                     required
                     value={departureCity}
                     onChange={(e) => setDepartureCity(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none"
+                    className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">Destination City</label>
+                  <label className="block text-[10px] font-bold text-neutral-400 uppercase mb-1">Destination City</label>
                   <input
                     type="text"
                     required
                     value={destinationCity}
                     onChange={(e) => setDestinationCity(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none"
+                    className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none"
                   />
                 </div>
               </div>
 
-              {/* Exact Pickup Location */}
               <div>
-                <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">Exact Boarding Pickup Location (Google Maps Pin)</label>
+                <label className="block text-[10px] font-bold text-neutral-400 uppercase mb-1">Exact Boarding Pickup Location (Google Maps Pin)</label>
                 <input
                   type="text"
                   required
                   value={pickupName}
                   onChange={(e) => setPickupName(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2 text-xs font-bold text-white focus:outline-none"
+                  className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-3.5 py-2 text-xs font-bold text-white focus:outline-none"
                 />
               </div>
 
-              {/* Drop Points */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <label className="block text-[10px] font-bold text-slate-400 uppercase">Multiple Drop Points along Route</label>
+                  <label className="block text-[10px] font-bold text-neutral-400 uppercase">Multiple Drop Points along Route</label>
                   <button
                     type="button"
                     onClick={addDropPoint}
-                    className="text-[10px] text-emerald-400 font-bold flex items-center gap-1 hover:underline"
+                    className="text-[10px] text-red-500 font-bold flex items-center gap-1 hover:underline"
                   >
                     <Plus className="w-3 h-3" /> Add Drop Stop
                   </button>
@@ -268,12 +260,12 @@ export default function TripCreationWizard({ onClose, onCreateTrip }: TripCreati
                         updated[i].name = e.target.value;
                         setDropPoints(updated);
                       }}
-                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-1.5 text-xs font-bold text-white focus:outline-none"
+                      className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-3 py-1.5 text-xs font-bold text-white focus:outline-none"
                     />
                     <button
                       type="button"
                       onClick={() => removeDropPoint(i)}
-                      className="p-2 text-rose-400 hover:text-rose-300"
+                      className="p-2 text-red-500 hover:text-red-400"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -283,43 +275,43 @@ export default function TripCreationWizard({ onClose, onCreateTrip }: TripCreati
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">Price / Person (₹)</label>
+                  <label className="block text-[10px] font-bold text-neutral-400 uppercase mb-1">Price / Person (₹)</label>
                   <input
                     type="number"
                     required
                     value={pricePerPerson}
                     onChange={(e) => setPricePerPerson(Number(e.target.value))}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs font-bold text-emerald-400 focus:outline-none"
+                    className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-3 py-2 text-xs font-bold text-red-500 focus:outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">Total Bus Seats</label>
+                  <label className="block text-[10px] font-bold text-neutral-400 uppercase mb-1">Total Bus Seats</label>
                   <input
                     type="number"
                     required
                     value={totalSeats}
                     onChange={(e) => setTotalSeats(Number(e.target.value))}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none"
+                    className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">Duration (Days)</label>
+                  <label className="block text-[10px] font-bold text-neutral-400 uppercase mb-1">Duration (Days)</label>
                   <input
                     type="number"
                     value={durationDays}
                     onChange={(e) => setDurationDays(Number(e.target.value))}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none"
+                    className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">Difficulty</label>
+                  <label className="block text-[10px] font-bold text-neutral-400 uppercase mb-1">Difficulty</label>
                   <select
                     value={difficultyLevel}
                     onChange={(e) => setDifficultyLevel(e.target.value as any)}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none"
+                    className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none"
                   >
                     <option value="Easy">Easy</option>
                     <option value="Moderate">Moderate</option>
@@ -331,7 +323,7 @@ export default function TripCreationWizard({ onClose, onCreateTrip }: TripCreati
               <button
                 type="button"
                 onClick={() => setStep(2)}
-                className="w-full py-3 rounded-xl bg-emerald-500 text-slate-950 font-black text-xs hover:bg-emerald-400 transition"
+                className="w-full py-3 rounded-xl bg-red-600 text-white font-black text-xs hover:bg-red-700 transition"
               >
                 Proceed to Itinerary Builder &rarr;
               </button>
@@ -342,12 +334,12 @@ export default function TripCreationWizard({ onClose, onCreateTrip }: TripCreati
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <h4 className="text-sm font-bold text-white flex items-center gap-2">
-                  <Calendar className="w-4 h-4 text-emerald-400" /> Day-wise Itinerary Configurator
+                  <Calendar className="w-4 h-4 text-red-500" /> Day-wise Itinerary Configurator
                 </h4>
                 <button
                   type="button"
                   onClick={addItineraryDay}
-                  className="px-3 py-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 rounded-xl text-xs font-bold flex items-center gap-1"
+                  className="px-3 py-1 bg-red-600/20 text-red-500 border border-red-600/40 rounded-xl text-xs font-bold flex items-center gap-1"
                 >
                   <Plus className="w-3.5 h-3.5" /> Add Day {itinerary.length + 1}
                 </button>
@@ -355,9 +347,9 @@ export default function TripCreationWizard({ onClose, onCreateTrip }: TripCreati
 
               <div className="space-y-3">
                 {itinerary.map((day, idx) => (
-                  <div key={idx} className="bg-slate-950 border border-slate-800 p-4 rounded-2xl space-y-2">
+                  <div key={idx} className="bg-neutral-950 border border-neutral-900 p-4 rounded-2xl space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-emerald-400 uppercase">Day {day.dayNumber}</span>
+                      <span className="text-xs font-bold text-red-500 uppercase">Day {day.dayNumber}</span>
                       <input
                         type="text"
                         placeholder="Day Title"
@@ -367,13 +359,13 @@ export default function TripCreationWizard({ onClose, onCreateTrip }: TripCreati
                           updated[idx].title = e.target.value;
                           setItinerary(updated);
                         }}
-                        className="w-3/4 bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1 text-xs font-bold text-white focus:outline-none"
+                        className="w-3/4 bg-black border border-neutral-800 rounded-lg px-2.5 py-1 text-xs font-bold text-white focus:outline-none"
                       />
                     </div>
 
                     <div className="grid grid-cols-2 gap-2 text-xs">
                       <div>
-                        <label className="block text-[10px] text-slate-500 font-bold uppercase">Meals Included</label>
+                        <label className="block text-[10px] text-neutral-500 font-bold uppercase">Meals Included</label>
                         <input
                           type="text"
                           value={day.meals}
@@ -382,11 +374,11 @@ export default function TripCreationWizard({ onClose, onCreateTrip }: TripCreati
                             updated[idx].meals = e.target.value;
                             setItinerary(updated);
                           }}
-                          className="w-full bg-slate-900 border border-slate-800 rounded-lg px-2 py-1 text-xs text-white"
+                          className="w-full bg-black border border-neutral-800 rounded-lg px-2 py-1 text-xs text-white"
                         />
                       </div>
                       <div>
-                        <label className="block text-[10px] text-slate-500 font-bold uppercase">Stay Details</label>
+                        <label className="block text-[10px] text-neutral-500 font-bold uppercase">Stay Details</label>
                         <input
                           type="text"
                           value={day.stayDetails}
@@ -395,7 +387,7 @@ export default function TripCreationWizard({ onClose, onCreateTrip }: TripCreati
                             updated[idx].stayDetails = e.target.value;
                             setItinerary(updated);
                           }}
-                          className="w-full bg-slate-900 border border-slate-800 rounded-lg px-2 py-1 text-xs text-white"
+                          className="w-full bg-black border border-neutral-800 rounded-lg px-2 py-1 text-xs text-white"
                         />
                       </div>
                     </div>
@@ -407,14 +399,14 @@ export default function TripCreationWizard({ onClose, onCreateTrip }: TripCreati
                 <button
                   type="button"
                   onClick={() => setStep(1)}
-                  className="w-1/3 py-3 rounded-xl bg-slate-800 text-slate-300 font-bold text-xs hover:bg-slate-700 transition"
+                  className="w-1/3 py-3 rounded-xl bg-neutral-900 text-neutral-300 font-bold text-xs hover:bg-neutral-800 transition"
                 >
                   &larr; Back
                 </button>
                 <button
                   type="button"
                   onClick={() => setStep(3)}
-                  className="w-2/3 py-3 rounded-xl bg-emerald-500 text-slate-950 font-black text-xs hover:bg-emerald-400 transition"
+                  className="w-2/3 py-3 rounded-xl bg-red-600 text-white font-black text-xs hover:bg-red-700 transition"
                 >
                   Proceed to Vehicle & Staff &rarr;
                 </button>
@@ -425,62 +417,62 @@ export default function TripCreationWizard({ onClose, onCreateTrip }: TripCreati
           {step === 3 && (
             <div className="space-y-4">
               <h4 className="text-sm font-bold text-white flex items-center gap-2">
-                <Bus className="w-4 h-4 text-emerald-400" /> Vehicle Specs & Tour Staff
+                <Bus className="w-4 h-4 text-red-500" /> Vehicle Specs & Tour Staff
               </h4>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">Bus / Vehicle Model</label>
+                  <label className="block text-[10px] font-bold text-neutral-400 uppercase mb-1">Bus / Vehicle Model</label>
                   <input
                     type="text"
                     required
                     value={vehicleType}
                     onChange={(e) => setVehicleType(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none"
+                    className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">Registration Number</label>
+                  <label className="block text-[10px] font-bold text-neutral-400 uppercase mb-1">Registration Number</label>
                   <input
                     type="text"
                     required
                     value={vehicleReg}
                     onChange={(e) => setVehicleReg(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs font-bold font-mono text-emerald-400 focus:outline-none"
+                    className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-3 py-2 text-xs font-bold font-mono text-red-500 focus:outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">Driver Name & Phone</label>
+                  <label className="block text-[10px] font-bold text-neutral-400 uppercase mb-1">Driver Name & Phone</label>
                   <input
                     type="text"
                     required
                     value={driverName}
                     onChange={(e) => setDriverName(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none"
+                    className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">Certified Tour Guide Name</label>
+                  <label className="block text-[10px] font-bold text-neutral-400 uppercase mb-1">Certified Tour Guide Name</label>
                   <input
                     type="text"
                     required
                     value={guideName}
                     onChange={(e) => setGuideName(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none"
+                    className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">Cancellation Policy</label>
+                <label className="block text-[10px] font-bold text-neutral-400 uppercase mb-1">Cancellation Policy</label>
                 <textarea
                   value={cancellationPolicy}
                   onChange={(e) => setCancellationPolicy(e.target.value)}
                   rows={2}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none"
+                  className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none"
                 />
               </div>
 
@@ -488,14 +480,14 @@ export default function TripCreationWizard({ onClose, onCreateTrip }: TripCreati
                 <button
                   type="button"
                   onClick={() => setStep(2)}
-                  className="w-1/3 py-3.5 rounded-xl bg-slate-800 text-slate-300 font-bold text-xs hover:bg-slate-700 transition"
+                  className="w-1/3 py-3.5 rounded-xl bg-neutral-900 text-neutral-300 font-bold text-xs hover:bg-neutral-800 transition"
                 >
                   &larr; Back
                 </button>
 
                 <button
                   type="submit"
-                  className="w-2/3 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-slate-950 font-black text-xs shadow-xl shadow-emerald-500/25 hover:scale-[1.02] transition"
+                  className="w-2/3 py-3.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-black text-xs shadow-xl shadow-red-600/30 transition"
                 >
                   Publish Group Trip & Activate Live GPS
                 </button>
