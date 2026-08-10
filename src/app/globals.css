@@ -40,28 +40,27 @@ body {
   background: #ef4444;
 }
 
-/* Custom Map Marker Override for Black & Red Theme */
-.custom-bus-marker, .custom-fleet-marker {
-  background: transparent !important;
-  border: none !important;
-}
-
-.custom-stop-marker {
-  background: transparent !important;
-  border: none !important;
-}
-
-/* Leaflet Container Styling */
+/* Leaflet Container Styling & Black-White-Red Map Tiles Filter */
 .leaflet-container {
-  background: #050505 !important;
+  background: #000000 !important;
   font-family: inherit !important;
+}
+
+.leaflet-tile {
+  filter: grayscale(100%) invert(100%) contrast(140%) hue-rotate(180deg) !important;
+}
+
+.custom-bus-marker, .custom-fleet-marker, .custom-stop-marker {
+  background: transparent !important;
+  border: none !important;
 }
 
 .leaflet-popup-content-wrapper {
   background: #0a0a0a !important;
   color: #ffffff !important;
-  border: 1 border-solid #dc2626 !important;
+  border: 1px solid #dc2626 !important;
   border-radius: 12px !important;
+  box-shadow: 0 10px 25px -5px rgba(220, 38, 38, 0.4) !important;
 }
 
 .leaflet-popup-tip {

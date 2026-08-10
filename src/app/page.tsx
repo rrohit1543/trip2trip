@@ -19,9 +19,11 @@ import AuthModal from '../components/auth/AuthModal';
 import AdminLoginModal from '../components/auth/AdminLoginModal';
 import ChatWidget from '../components/common/ChatWidget';
 import ReviewModal from '../components/common/ReviewModal';
+import { useRouter } from 'next/navigation';
 import { Radio, Star } from 'lucide-react';
 
 export default function Home() {
+  const router = useRouter();
   const {
     currentUser,
     users,
@@ -40,7 +42,6 @@ export default function Home() {
     requestAdminLoginMFA,
     verifyAdminMFA,
     logoutUser,
-    switchUserRole,
     submitKYC,
     updateKYCStatus,
     createTrip,
@@ -95,8 +96,8 @@ export default function Home() {
       {/* Navbar Header */}
       <Navbar
         currentUser={currentUser}
-        onOpenAuthModal={() => setIsAuthModalOpen(true)}
-        onOpenAdminAuthModal={() => setIsAdminAuthModalOpen(true)}
+        onOpenAuthModal={() => router.push('/login')}
+        onOpenAdminAuthModal={() => router.push('/admin/login')}
         onLogout={logoutUser}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
