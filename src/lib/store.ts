@@ -25,15 +25,15 @@ import {
 import { hashPassword, generateOTP, checkRateLimit, createSecurityLog, isValidEmail, isValidMobile } from './security';
 
 const STORAGE_KEYS = {
-  CURRENT_USER: 'trip2trip_current_user',
-  USERS: 'trip2trip_users',
-  KYC: 'trip2trip_kyc',
-  TRIPS: 'trip2trip_trips',
-  TELEMETRY: 'trip2trip_telemetry',
-  BOOKINGS: 'trip2trip_bookings',
-  REVIEWS: 'trip2trip_reviews',
-  CHAT: 'trip2trip_chat',
-  SECURITY_LOGS: 'trip2trip_security_logs',
+  CURRENT_USER: 'trip2trip_v4_red_current_user',
+  USERS: 'trip2trip_v4_red_users',
+  KYC: 'trip2trip_v4_red_kyc',
+  TRIPS: 'trip2trip_v4_red_trips',
+  TELEMETRY: 'trip2trip_v4_red_telemetry',
+  BOOKINGS: 'trip2trip_v4_red_bookings',
+  REVIEWS: 'trip2trip_v4_red_reviews',
+  CHAT: 'trip2trip_v4_red_chat',
+  SECURITY_LOGS: 'trip2trip_v4_red_security_logs',
 };
 
 function getStored<T>(key: string, fallback: T): T {
